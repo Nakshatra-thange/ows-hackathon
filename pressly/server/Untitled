@@ -1,0 +1,4 @@
+# server/.env
+OPENAI_API_KEY=your_key_here
+RESEND_API_KEY=your_key_here  # optional
+OWS_WALLET=agent
