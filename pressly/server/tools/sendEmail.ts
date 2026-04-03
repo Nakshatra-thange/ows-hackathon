@@ -2,20 +2,17 @@ import { broadcast } from '../index'
 import { logTransaction } from '../ledger'
 
 export async function sendNewsletter(content: string, subject: string): Promise<void> {
-  broadcast({ event: 'agent_step', message: `📧 Sending newsletter to subscribers...`, status: 'running' })
+  broadcast({ 
+    event: 'agent_step', 
+    message: `Sending newsletter...`, 
+    status: 'running' })
+  await new Promise(r => setTimeout(r, 1000))
 
-  // Use Resend if available, otherwise mock
-  if (process.env.RESEND_API_KEY) {
-    const { Resend } = await import('resend')
-    const resend = new Resend(process.env.RESEND_API_KEY)
-    await resend.emails.send({
-      from: 'pressly@yourdomain.com',
-      to: ['demo@hackathon.com'],
-      subject,
-      html: `<pre>${content}</pre>`
-    })
-    logTransaction('spend', 0.005, 'Email delivery via Resend')
-  }
+  logTransaction('spend', 0.005, 'Simulated email delivery')
 
-  broadcast({ event: 'agent_step', message: `✅ Newsletter sent! Paid $0.005 for delivery`, status: 'done' })
+  broadcast({
+    event: 'agent_step',
+    message: `Newsletter sent! (simulated)`,
+    status: 'done'
+  })
 }

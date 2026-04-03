@@ -1,5 +1,5 @@
-import { broadcast } from './index'
-
+import { broadcast } from '../index'
+import { logTransaction } from '../ledger'
 interface Transaction {
   type: 'earn' | 'spend'
   amount: number
@@ -7,24 +7,40 @@ interface Transaction {
   timestamp: string
 }
 
-const transactions: Transaction[] = []
 
-export function logTransaction(type: 'earn' | 'spend', amount: number, description: string) {
-  const tx: Transaction = {
-    type, amount, description,
-    timestamp: new Date().toISOString()
+
+export async function scrapeTrendingTopics(topic: string): Promise<string> {
+    broadcast({
+      event: 'agent_step',
+      message: `Scraping trending topics for: ${topic}`,
+      status: 'running'
+    })
+  
+   
+    await new Promise(r => setTimeout(r, 1000))
+  
+
+    broadcast({
+      event: 'agent_step',
+      message: `Using OWS wallet to pay for scraping...`,
+      status: 'running'
+    })
+  
+    logTransaction('spend', 0.01, 'Scraped trending topics (x402 simulated)')
+  
+    const data = `
+    1. AI agents are automating entire businesses
+    2. Crypto micropayments are replacing subscriptions
+    3. Autonomous systems are entering real-world markets
+    4. Solana ecosystem growth continues
+    5. AI + blockchain convergence is accelerating
+    `
+  
+    broadcast({
+      event: 'agent_step',
+      message: `Scraping complete. Paid $0.01`,
+      status: 'done'
+    })
+  
+    return data
   }
-  transactions.push(tx)
-
-  const earned = transactions.filter(t => t.type === 'earn').reduce((s, t) => s + t.amount, 0)
-  const spent = transactions.filter(t => t.type === 'spend').reduce((s, t) => s + t.amount, 0)
-
-  broadcast({
-    event: 'pnl_update',
-    earned: earned.toFixed(4),
-    spent: spent.toFixed(4),
-    profit: (earned - spent).toFixed(4),
-    lastTx: tx,
-    transactions
-  })
-}

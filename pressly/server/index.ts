@@ -1,18 +1,23 @@
 import express from 'express'
-import  WebSocketServer from 'ws'
+import  WebSocket from 'ws'
 import { createServer } from 'http'
 import dotenv from 'dotenv'
+dotenv.config()
+import cors from 'cors'
+
 import { runAgent } from './agent'
 
-dotenv.config()
-
 const app = express()
+app.use(cors({
+    origin: 'http://localhost:5173'
+  }))
+  
 app.use(express.json())
 
-const server = createServer(app)
-const wss = new WebSocketServer({ server })
 
-// Global broadcast — agent uses this to push live updates
+const server = createServer(app)
+const wss = new WebSocket.Server({ port: 3002 })
+
 export function broadcast(event: object) {
   const msg = JSON.stringify(event)
   wss.clients.forEach(client => {
@@ -20,14 +25,12 @@ export function broadcast(event: object) {
   })
 }
 
-// Trigger agent run
 app.post('/api/run', async (req, res) => {
   const { topic } = req.body
   res.json({ status: 'started' })
   runAgent(topic || 'AI and technology') // non-blocking
 })
 
-// Pause flag
 let paused = false
 export const isPaused = () => paused
 app.post('/api/pause', (_, res) => { paused = true; res.json({ paused: true }) })
