@@ -72,9 +72,9 @@ one model, well-defined tools, clear instructions, simple loop.
 ### Setup
 
 # Clone and install
-git clone https://github.com/yourname/pressly
+git clone https://github.com/Nakshatra-thange/ows-hackathon
 cd pressly/server && npm install
-cd ../client && npm install
+cd ../client2 && npm install
 
 
 Create `server/.env`:
