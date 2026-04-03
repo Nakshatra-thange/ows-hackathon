@@ -1,15 +1,17 @@
+import dotenv from 'dotenv'
+dotenv.config()
+
 import express from 'express'
 import  WebSocket from 'ws'
 import { createServer } from 'http'
-import dotenv from 'dotenv'
-dotenv.config()
+
 import cors from 'cors'
 
 import { runAgent } from './agent'
 
 const app = express()
 app.use(cors({
-    origin: 'http://localhost:5173'
+    origin: 'http://localhost:8080'
   }))
   
 app.use(express.json())
@@ -21,14 +23,14 @@ const wss = new WebSocket.Server({ port: 3002 })
 export function broadcast(event: object) {
   const msg = JSON.stringify(event)
   wss.clients.forEach(client => {
-    if (client.readyState === 1) client.send(msg)
+    if (client.readyState ==WebSocket.OPEN){ client.send(msg)}
   })
 }
-
 app.post('/api/run', async (req, res) => {
   const { topic } = req.body
+  console.log(`[Server] /api/run called with topic: ${topic}`) // add this
   res.json({ status: 'started' })
-  runAgent(topic || 'AI and technology') // non-blocking
+  runAgent(topic || 'AI and technology').catch(console.error) // add .catch
 })
 
 let paused = false

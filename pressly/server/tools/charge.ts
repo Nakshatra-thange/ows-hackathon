@@ -14,7 +14,7 @@ export async function chargeSubscribers(): Promise<number> {
   let charged = 0
   for (const sub of SUBSCRIBERS) {
    
-    await new Promise(r => setTimeout(r, 800))
+    await new Promise(r => setTimeout(r, 600))
     logTransaction('earn', 0.01, `Subscriber ${sub.id} paid for newsletter`)
     charged += 0.01
     broadcast({ event: 'agent_step', message: `✅ Charged ${sub.wallet.slice(0,8)}... $0.01`, status: 'done' })

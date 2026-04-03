@@ -7,8 +7,6 @@ interface Transaction {
   timestamp: string
 }
 
-
-
 export async function scrapeTrendingTopics(topic: string): Promise<string> {
     broadcast({
       event: 'agent_step',

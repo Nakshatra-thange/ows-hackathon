@@ -1,4 +1,4 @@
-import { broadcast } from './index'
+import { broadcast , isPaused } from './index'
 import { scrapeTrendingTopics } from './tools/scrape'
 import { generateNewsletter } from './tools/generate'
 import { chargeSubscribers } from './tools/charge'
@@ -9,20 +9,20 @@ const SPEND_CAP = 0.10
 let totalSpent = 0
 
 export async function runAgent(topic: string) {
-  broadcast({ 
-    event: 'agent_start', 
-    topic, 
-    message: `Pressly agent starting. Topic: ${topic}` 
-})
+  console.log(`[Agent] Starting run. Topic: ${topic}`)
+  
+  broadcast({ event: 'agent_start', message: `Pressly agent starting. Topic: "${topic}"` })
   totalSpent = 0
 
   try {
+    console.log('[Agent] Calling scrape...') 
     const content = await scrapeTrendingTopics(topic)
     totalSpent += 0.01
+    console.log('[Agent] Scrape done. Calling generate...')
     if (!content || content.length < 20) {
         broadcast({
           event: 'agent_error',
-          message: `❌ No useful content found. Stopping.`
+          message: `No useful content found. Stopping.`
         })
         return
       }

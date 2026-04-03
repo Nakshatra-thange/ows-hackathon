@@ -1,1 +1,0 @@
-console.log("💸 Paid $0.01 via OWS wallet")
