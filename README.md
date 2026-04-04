@@ -5,6 +5,8 @@ An AI agent that runs a newsletter business on its own.
 It finds trending topics, writes a newsletter, charges readers, and sends the email.
 No human does any of this. The agent does.
 
+> Built at the OWS Hackathon. The agent holds a real wallet, pays for its own tools, and earns from subscribers — all autonomous.
+
 ---
 
 ## What it does
@@ -106,7 +108,7 @@ pressly/
 │       ├── generate.ts   # writes the newsletter
 │       ├── charge.ts     # collects payment from subscribers
 │       └── sendEmail.ts  # delivers to inbox
-└── client/
+└── client2/
 └── src/
 ├── App.tsx           # main layout
 ├── AgentLog.tsx      # live step feed
@@ -134,3 +136,9 @@ The whole thing takes about 15 seconds.
 - Agent decides topic based on what performed well last week
 - Spend analytics across newsletter runs
 - Let the agent reinvest profits into better scraping tools
+
+## Known limitations
+
+- x402 subscriber charging is simulated (real flow requires funded subscriber wallets)
+- Scraping uses mock data when Firecrawl balance is zero
+- Tested on Mac only
